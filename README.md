@@ -1,20 +1,20 @@
 # System Identification with Lipschitz Regularized Neural Networks
 
 ### Problem Statement and Solution Approach
-We use neural networks to learn governing equations from data. Specifically
-we reconstruct the right-hand side of a system of ODEs <img src="https://render.githubusercontent.com/render/math?math=\dot{x}(t)=f(t, x(t))"> directly
-from observed uniformly time-sampled data using a neural network. In contrast with
-other neural network based approaches to this problem, we add a Lipschitz regularization
-term to our loss function. In the synthetic examples we observed empirically that
-this regularization results in a smoother approximating function and better generalization
-properties when compared with non-regularized models, both on trajectory and
-non-trajectory data, especially in presence of noise. In contrast with sparse regression
-approaches, since neural networks are universal approximators, we don’t need any prior
-knowledge on the ODE system. Since the model is applied component wise, it can
-handle systems of any dimension, making it usable for real-world data.
+Governing laws for dynamical systems <img src="https://render.githubusercontent.com/render/math?math=\dot{x}(t)=f(t, x(t))"> have traditionally been derived from expert knowledge and first principles, however in recent years the large amount of data available resulted in a growing interest in data-driven approaches for automated model discovery. System identification deals with building mathematical models and approximating the right-hand side <img src="https://render.githubusercontent.com/render/math?math=f(t, x(t))"> using only observed data from the system.
+Frequently used approaches for data-driven discovery of nonlinear differential equations are sparse regression and neural networks. Sparse regression approaches are based on a user-determined library of candidate terms from which the most important ones are selected using sparse regression. Neural networks, especially feed forward and recurrent networks, have been used often for system identification: depending on the architecture and on the loss function, they can be used as sparse regression models or completely determine an unknown differential operator
+
+In this work we investigate the problem of approximating unknown governing equations, i.e. a vector-valued RHS <img src="https://render.githubusercontent.com/render/math?math=f(t, x(t))">, directly from uniformly time-sampled trajectories using a feed forward neural network <img src="https://render.githubusercontent.com/render/math?math=N">. The main contribution of our paper is that we improve generalization and recovery of the governing equation by adding a Lipschitz regularization term in our loss function <img src="https://render.githubusercontent.com/render/math?math=L">:
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=L(\theta)&space;=\frac{1}{k}\sum_{i=1}^k&space;\|&space;N(&space;X_i,&space;\theta)-&space;Y_i&space;\|_2^2&space;&plus;&space;\alpha&space;\text{Lip}(N(\cdot,&space;\theta)),&space;\\&space;\text{with}&space;\quad&space;\text{Lip}(N(\cdot,&space;\theta))&space;=\sup_{x&space;\in&space;\mathbb{R}^{d&space;&plus;&space;1}}&space;\sup_{y&space;\in&space;\mathbb{R}^{d&space;&plus;&space;1}}\frac{\|N(x)&space;-N(y)\|_2}{\|x&space;-y\|_2}." target="_blank"><img src="https://latex.codecogs.com/gif.latex?L(\theta)&space;=\frac{1}{k}\sum_{i=1}^k&space;\|&space;N(&space;X_i,&space;\theta)-&space;Y_i&space;\|_2^2&space;&plus;&space;\alpha&space;\text{Lip}(N(\cdot,&space;\theta)),&space;\\&space;\text{with}&space;\quad&space;\text{Lip}(N(\cdot,&space;\theta))&space;=\sup_{x&space;\in&space;\mathbb{R}^{d&space;&plus;&space;1}}&space;\sup_{y&space;\in&space;\mathbb{R}^{d&space;&plus;&space;1}}\frac{\|N(x)&space;-N(y)\|_2}{\|x&space;-y\|_2}." title="L(\theta) =\frac{1}{k}\sum_{i=1}^k \| N( X_i, \theta)- Y_i \|_2^2 + \alpha \text{Lip}(N(\cdot, \theta)), \\ \text{with} \quad \text{Lip}(N(\cdot, \theta)) =\sup_{x \in \mathbb{R}^{d + 1}} \sup_{y \in \mathbb{R}^{d + 1}}\frac{\|N(x) -N(y)\|_2}{\|x -y\|_2}." /></a>
+
+Here <img src="https://render.githubusercontent.com/render/math?math=\theta"> are the network parameters, <img src="https://render.githubusercontent.com/render/math?math=(X_i, Y_i)"> are the training data, <img src="https://render.githubusercontent.com/render/math?math=\alpha>0"> and <img src="https://render.githubusercontent.com/render/math?math=\text{Lip}(N(\cdot, \theta))"> is the Lipschitz constant of the network. This regularization term forces the Lipschitz constant of the network <img src="https://render.githubusercontent.com/render/math?math=N"> to be small, improving the smoothness of the approximating function especially in presence of noise in the data.
+We empirically show that the test error on trajectory data, as well as the recovery error on non-trajectory data, improves when using this kind of regularization.
+
+Our method has multiple advantages over other approaches: since neural networks are universal approximators, we can recover very general differential equations, we do not need to commit to a particular dictionary of basis functions, nor need any prior information about the order or about the analytical form of the differential equation, in contrast with sparse regression approaches. Thanks to the Lipschitz regularization term, our network is able to generalize better than non-regularized networks for unseen data and it is robust to noise, in contrast with finite differences and polynomial approximation approaches. Since we use a simple feed forward network, our model runs faster than more complicated recurrent or residual architectures. Since the model is applied component wise, it can handle systems of any dimension, making it usable for real-world data.
 
 ### Some Experimental Results
-We report here some results obtained when recovering the non-autonomousODE <a href="https://www.codecogs.com/eqnedit.php?latex=\dot{x}(t)&space;=&space;e^{-x}\log(t)&space;-&space;t^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot{x}(t)&space;=&space;e^{-x}\log(t)&space;-&space;t^2" title="\dot{x}(t) = e^{-x}\log(t) - t^2" /></a> with 1% noise in the data.
+We report here some results obtained when recovering the non-autonomous ODE <a href="https://www.codecogs.com/eqnedit.php?latex=\dot{x}(t)&space;=&space;e^{-x}\log(t)&space;-&space;t^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot{x}(t)&space;=&space;e^{-x}\log(t)&space;-&space;t^2" title="\dot{x}(t) = e^{-x}\log(t) - t^2" /></a> with 1% noise in the data.
 
 In the following table we can see that for a fixed training Mean Squared Error (MSE), regularized networks always attain a better test error than the non-regularized one. 
 
@@ -22,4 +22,9 @@ In the following table we can see that for a fixed training Mean Squared Error (
 
 Below we plot the recovery error on test data for the non-regularized network (left figure) and for the best regularized network with parameter 0.01 (right figure). Darker gray level represents lower error. We can see again that the Lipschitz regularized network attains better accuracy on test data than the non regularized one.
 
-<img src="Images/WiML_NoReg_0.01.png" width="300">
+<img src="Images/WiML_NoReg_0.01.png" width="800">
+
+### Comments
+The code can be found in the code folder and it can be used to generate comparable results to the ones shown above.
+
+A preprint of this paper with multiple examples and more detailed explanation of the data generation, model and approach can be found here: (https://arxiv.org/abs/2009.03288)
