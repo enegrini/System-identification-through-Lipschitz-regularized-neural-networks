@@ -1,5 +1,7 @@
 # System Identification with Lipschitz Regularized Neural Networks
+The code can be found in the code folder and it can be used to generate comparable results to the ones shown above.
 
+A preprint of this paper with multiple examples and more detailed explanation of the data generation, model and approach can be found here: (https://arxiv.org/abs/2009.03288)
 ### Problem Statement and Solution Approach
 Governing laws for dynamical systems <img src="https://render.githubusercontent.com/render/math?math=\dot{x}(t)=f(t, x(t))"> have traditionally been derived from expert knowledge and first principles, however in recent years the large amount of data available resulted in a growing interest in data-driven approaches for automated model discovery. System identification deals with building mathematical models and approximating the right-hand side <img src="https://render.githubusercontent.com/render/math?math=f(t, x(t))"> using only observed data from the system.
 Frequently used approaches for data-driven discovery of nonlinear differential equations are sparse regression and neural networks. Sparse regression approaches are based on a user-determined library of candidate terms from which the most important ones are selected using sparse regression. Neural networks, especially feed forward and recurrent networks, have been used often for system identification: depending on the architecture and on the loss function, they can be used as sparse regression models or completely determine an unknown differential operator
@@ -23,8 +25,3 @@ In the following table we can see that for a fixed training Mean Squared Error (
 Below we plot the recovery error on test data for the non-regularized network (left figure) and for the best regularized network with parameter 0.01 (right figure). Darker gray level represents lower error. We can see again that the Lipschitz regularized network attains better accuracy on test data than the non regularized one.
 
 <img src="Images/WiML_NoReg_0.01.png" width="800">
-
-### Comments
-The code can be found in the code folder and it can be used to generate comparable results to the ones shown above.
-
-A preprint of this paper with multiple examples and more detailed explanation of the data generation, model and approach can be found here: (https://arxiv.org/abs/2009.03288)
