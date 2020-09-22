@@ -1,5 +1,5 @@
 # System Identification with Lipschitz Regularized Neural Networks
-The code can be found in the code folder and it can be used to generate comparable results to the ones shown above.
+The code for this project is written in Python and can be found in the code folder. It can be used to generate comparable results to the ones shown below.
 
 A preprint of this paper with multiple examples and more detailed explanation of the data generation, model and approach can be found here: (https://arxiv.org/abs/2009.03288)
 ### Problem Statement and Solution Approach
